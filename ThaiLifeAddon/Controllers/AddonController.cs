@@ -1,9 +1,4 @@
-﻿using System.Net.Http;
-using System.Net;
-using System.Threading.Tasks;
-using System.Web.Http;
-using ThaiLifeAddon.Models.RequestModel;
-using WolfApprove.API2.Controllers.Services;
+﻿using System.Web.Http;
 using WolfApprove.Model.CustomClass;
 using ThaiLifeAddon.Managers;
 
