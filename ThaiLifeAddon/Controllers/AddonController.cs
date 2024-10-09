@@ -12,22 +12,16 @@ namespace ThaiLifeAddon
     [RoutePrefix("api/v1/addonThaiLife")]
     public class AddonController : ApiController
     {
-        public AddonController()
+        [HttpPost]
+        [Route("StartAddonv")]
+        public IHttpActionResult StartAddon()
         {
-
+            return Ok("Addon : Enable");
         }
 
         [HttpPost]
         [Route("MAdvancveFormByMemoIds")]
         public IHttpActionResult ValidatePurchase(GetMAdvancveFormByMemoIdRequestBody requestBody)
-        {
-            var result = AddonManager.MAdvancveFormByMemoIds(requestBody);
-            return Ok(result);
-        }
-
-        [HttpGet]
-        [Route("StartAddonv")]
-        public IHttpActionResult StartAddon(GetMAdvancveFormByMemoIdRequestBody requestBody)
         {
             var result = AddonManager.MAdvancveFormByMemoIds(requestBody);
             return Ok(result);
