@@ -69,6 +69,7 @@
     <Compile Include="Controllers\AddonController.cs" />
     <Compile Include="Handlers\AddonApiVersionRedirectHandler.cs" />
     <Compile Include="Helpers\AddonMiddlewareRegistration.cs" />
+    <Compile Include="Helpers\AdvanceFormExt.cs" />
     <Compile Include="Managers\AddonManager.cs" />
     <Compile Include="Models\ResponeBeen.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -78,6 +79,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Models\DtoModels\" />
     <Folder Include="Models\RequestModel\" />
     <Folder Include="Models\ResponeModel\" />
   </ItemGroup>

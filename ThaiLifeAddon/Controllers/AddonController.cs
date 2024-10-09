@@ -16,7 +16,7 @@ namespace ThaiLifeAddon
 
         [HttpPost]
         [Route("MAdvancveFormByMemoIds")]
-        public IHttpActionResult ValidatePurchase(GetMAdvancveFormByMemoIdRequestBody requestBody)
+        public IHttpActionResult MAdvancveFormByMemoIds(GetMAdvancveFormByMemoIdRequestBody requestBody)
         {
             var result = AddonManager.MAdvancveFormByMemoIds(requestBody);
             return Ok(result);
