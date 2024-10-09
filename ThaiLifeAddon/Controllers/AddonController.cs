@@ -8,7 +8,7 @@ namespace ThaiLifeAddon
     public class AddonController : ApiController
     {
         [HttpPost]
-        [Route("StartAddonv")]
+        [Route("StartAddon")]
         public IHttpActionResult StartAddon()
         {
             return Ok("Addon : Enable");
