@@ -73,11 +73,17 @@ namespace ThaiLifeAddon.Managers
                             var documentNumber = ReserveCarExt.getValueAdvanceForm(memo.MAdvancveForm, "เลขที่ใบขอซื้อ");
                             var srcOrder_List = AdvanceFormExt.GetDataTable(memo.MAdvancveForm, "รายการ");
 
-                            var memoQuery = db.TRNMemoes.Where(x =>
-                            (db.TRNMemoForms.Any(a => a.obj_label == "เลขที่ใบขอซื้อ" && a.obj_value == documentNumber || a.obj_value == memo.DocumentNo) || x.DocumentNo == memo.DocumentNo) &&
-                            x.StatusName != Ext.Status._Cancelled &&
-                            x.StatusName != Ext.Status._Rejected &&
-                            x.StatusName != Ext.Status._Draft);
+                            //var memoQuery = db.TRNMemoes.Where(x =>
+                            //(db.TRNMemoForms.Any(a => a.obj_label == "เลขที่ใบขอซื้อ" && a.obj_value == documentNumber || a.obj_value == memo.DocumentNo) || x.DocumentNo == memo.DocumentNo) &&
+                            //x.StatusName != Ext.Status._Cancelled &&
+                            //x.StatusName != Ext.Status._Rejected &&
+                            //x.StatusName != Ext.Status._Draft);
+
+                            var memoQuery = db.TRNReferenceDocs.Where(x => x.MemoRefDocID == memo.MemoId)
+                                .Join(db.TRNMemoes,
+                                rm => rm.MemoID,
+                                m => memo.MemoId,
+                                (rm, m) => m);
 
                             var memoRelate = memoQuery.ToList();
                             LogAddon($"memoRelate count : {memoRelate.Count}");
