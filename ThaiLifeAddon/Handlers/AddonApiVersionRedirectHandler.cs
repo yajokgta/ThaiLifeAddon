@@ -25,7 +25,7 @@ namespace AddonProject.Handlers
                 }
 
                 // ส่ง Request ใหม่ไปยัง Pipeline
-                return await base.SendAsync(newRequest, cancellationToken);
+                await base.SendAsync(newRequest, cancellationToken);
             }
 
             return await base.SendAsync(request, cancellationToken);

@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using WolfApprove.API2.Extension;
+using System.Web.Http.Results;
 
 namespace ThaiLifeAddon.Helpers
 {
@@ -56,13 +57,11 @@ namespace ThaiLifeAddon.Helpers
         {
             public string label { get; set; }
             public string alter { get; set; }
-            //public Control control { get; set; }
         }
 
         public class Control
         {
             public Template template { get; set; }
-            //public DataControl Data { get; set; }
         }
 
         public class Date
@@ -341,6 +340,25 @@ namespace ThaiLifeAddon.Helpers
             return result;
         }
 
+        public static int FindRowIndexById(Data table, string id)
+        {
+            int rowIndex = 0;
+
+            foreach (var row in table.row)
+            {
+                foreach (var item in row)
+                {
+                    if (item.value == "id")
+                    {
+                        return rowIndex;
+                    }
+                }
+                rowIndex++;
+            }
+
+            return -1;
+        }
+
         public static List<ColumnModel> GetAllColumnIndexTable(string advanceForm, string label)
         {
             var result = new List<ColumnModel>();
@@ -386,6 +404,13 @@ namespace ThaiLifeAddon.Helpers
             }
             table.row[rowIndex][columnIndex].value = value;
 
+            return table;
+        }
+
+        public static Data RemoveRowById(Data table, string id)
+        {
+            var filteredData = table.row.Where(innerList => !innerList.Any(item => item.value == id)).ToList();
+            table.row = filteredData;
             return table;
         }
 
