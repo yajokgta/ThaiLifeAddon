@@ -2,6 +2,7 @@
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
+using ThaiLifeAddon.Helpers;
 
 namespace AddonProject.Handlers
 {
@@ -9,10 +10,15 @@ namespace AddonProject.Handlers
     {
         protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
-            if (request.RequestUri.AbsolutePath.StartsWith("/api/Memo/MemoDetail/MAdvancveFormByMemoIds"))
+            if (request.RequestUri.AbsolutePath.Contains("/api/Memo/MemoDetail/MAdvancveFormByMemoIds"))
             {
+                WriteLogFile.LogAddon("Request Condition Redirect Result : " + request.RequestUri.AbsolutePath.Contains("/api/Memo/MemoDetail/MAdvancveFormByMemoIds"));
+                WriteLogFile.LogAddon($"ChangePath To /api/v1/addonThaiLife/MAdvancveFormByMemoIds");
                 // สร้าง Request ใหม่โดยใช้ URI ใหม่
-                var newRequest = new HttpRequestMessage(request.Method, new Uri(request.RequestUri.AbsoluteUri.Replace("/api/Memo/MemoDetail/MAdvancveFormByMemoIds", "/api/v1/addonThaiLife/MAdvancveFormByMemoIds")))
+                var newRequest = new 
+                    HttpRequestMessage(request.Method, 
+                    new Uri(request.RequestUri.AbsoluteUri
+                    .Replace("/api/Memo/MemoDetail/MAdvancveFormByMemoIds", "/api/v1/addonThaiLife/MAdvancveFormByMemoIds")))
                 {
                     Content = request.Content,
                     Version = request.Version
