@@ -388,22 +388,7 @@ namespace ThaiLifeAddon.Helpers
 
         public static Data ReplaceValueInTable(Data table, int rowIndex, int columnIndex, string value)
         {
-            while (rowIndex >= table.row.Count)
-            {
-                int columnCount = table.row.Count > 0 ? table.row[0].Count : 0;
-                var newRow = new List<Row>();
-                for (int i = 0; i < columnCount; i++)
-                {
-                    newRow.Add(new Row());
-                }
-                table.row.Add(newRow);
-            }
-            while (columnIndex >= table.row[rowIndex].Count)
-            {
-                table.row[rowIndex].Add(new Row());
-            }
             table.row[rowIndex][columnIndex].value = value;
-
             return table;
         }
 

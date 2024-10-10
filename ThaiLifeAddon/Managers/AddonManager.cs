@@ -79,13 +79,11 @@ namespace ThaiLifeAddon.Managers
                             //x.StatusName != Ext.Status._Rejected &&
                             //x.StatusName != Ext.Status._Draft);
 
-                            var memoQuery = db.TRNReferenceDocs.Where(x => x.MemoRefDocID == memo.MemoId)
+                            var memoRelate = db.TRNReferenceDocs.Where(x => x.MemoRefDocID == memo.MemoId)
                                 .Join(db.TRNMemoes,
                                 rm => rm.MemoID,
-                                m => memo.MemoId,
-                                (rm, m) => m);
-
-                            var memoRelate = memoQuery.ToList();
+                                m => m.MemoId,
+                                (rm, m) => m).ToList();
                             LogAddon($"memoRelate count : {memoRelate.Count}");
 
                             //var initialMemo = memoRelate.OrderBy(x => x.CompletedDate).FirstOrDefault();
@@ -106,23 +104,23 @@ namespace ThaiLifeAddon.Managers
                                 });
                             }
 
-                            LogAddon($"initial_Orders : {order_List.ToJson()}");
+                            LogAddon($"initial_Orders : {initial_Orders.ToJson()}");
 
                             var total_Orders = new List<OrderModel>();
 
                             foreach (var memoItem in memos)
                             {
-                                var memoItem_order_List = AdvanceFormExt.GetDataTable(initialMemo.MAdvancveForm, "รายการ").row;
-                                var memoItem_id_Index = AdvanceFormExt.GetAllColumnIndexTable(initialMemo.MAdvancveForm, "รายการ")?.FirstOrDefault(x => x.Name == "id").Index;
-                                var memoItem_amount_Index = AdvanceFormExt.GetAllColumnIndexTable(initialMemo.MAdvancveForm, "รายการ")?.FirstOrDefault(x => x.Name == "จำนวน").Index;
+                                var memoItem_order_List = AdvanceFormExt.GetDataTable(memoItem.MAdvancveForm, "รายการ").row;
+                                var memoItem_id_Index = AdvanceFormExt.GetAllColumnIndexTable(memoItem.MAdvancveForm, "รายการ")?.FirstOrDefault(x => x.Name == "id").Index ?? 0;
+                                var memoItem_amount_Index = AdvanceFormExt.GetAllColumnIndexTable(memoItem.MAdvancveForm, "รายการ")?.FirstOrDefault(x => x.Name == "จำนวน").Index ?? 0;
 
                                 var memoItem_initial_Orders = new List<OrderModel>();
                                 foreach (var order in memoItem_order_List)
                                 {
                                     total_Orders.Add(new OrderModel
                                     {
-                                        Id = order[id_Index].value,
-                                        Amount = int.Parse(order[amount_Index].value),
+                                        Id = order[memoItem_id_Index].value,
+                                        Amount = int.Parse(order[memoItem_amount_Index].value),
                                     });
                                 }
                             }
@@ -148,8 +146,10 @@ namespace ThaiLifeAddon.Managers
                                           Amount = initial.Amount - total.Amount,
                                       })
                                 .ToList();
+                            LogAddon($"result orderDifferences : {orderDifferences.ToJson()}");
 
                             var removeOders = orderDifferences.FindAll(x => x.Amount <= 0);
+                            LogAddon($"result removeOders : {removeOders.ToJson()}");
 
                             foreach (var od in orderDifferences)
                             {
