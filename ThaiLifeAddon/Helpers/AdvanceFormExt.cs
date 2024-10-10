@@ -348,7 +348,7 @@ namespace ThaiLifeAddon.Helpers
             {
                 foreach (var item in row)
                 {
-                    if (item.value == "id")
+                    if (item.value == id)
                     {
                         return rowIndex;
                     }
