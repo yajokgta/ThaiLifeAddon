@@ -1,7 +1,6 @@
 ﻿using System.Web.Http;
-using WolfApprove.Model.CustomClass;
 using ThaiLifeAddon.Managers;
-using static ThaiLifeAddon.Helpers.WriteLogFile;
+using WolfApprove.Model.CustomClass;
 
 namespace ThaiLifeAddon
 {

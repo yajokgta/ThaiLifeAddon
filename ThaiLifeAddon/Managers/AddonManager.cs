@@ -100,7 +100,7 @@ namespace ThaiLifeAddon.Managers
                                 });
                             }
 
-                            LogAddon($"initial_Orders : {initial_Orders.ToJson()}");
+                            LogAddon($"initial_Orders : {order_List.ToJson()}");
 
                             var total_Orders = new List<OrderModel>();
 
@@ -130,7 +130,7 @@ namespace ThaiLifeAddon.Managers
                                 })
                                 .ToList();
 
-                            LogAddon($"Start orderDifferences");
+                            LogAddon($"total_Orders : {total_Orders.ToJson()}");
 
                             var orderDifferences = total_Orders
                                 .Join(initial_Orders,
@@ -157,6 +157,7 @@ namespace ThaiLifeAddon.Managers
                                 order_List = AdvanceFormExt.RemoveRowById(order_List, od.Id);
                             }
 
+                            LogAddon($"result OrderList : {order_List.ToJson()}");
                             memo.MAdvancveForm = AdvanceFormExt.ReplaceDataTable(memo.MAdvancveForm, JObject.Parse(JsonConvert.SerializeObject(order_List)), "รายการ");
                         }
                     }
