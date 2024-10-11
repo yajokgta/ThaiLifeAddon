@@ -29,6 +29,7 @@ namespace ThaiLifeAddon.Managers
             "PO03",
             "PO-Cat"
         };
+
         public class MAdvancveFormResponeModel
         {
             public int MemoId { get; set; }
@@ -57,7 +58,7 @@ namespace ThaiLifeAddon.Managers
 
                 result = db.TRNMemoes.Where(x => body.MemoIds.Contains(x.MemoId)).Select(x => new MAdvancveFormResponeModel
                 {
-                    MemoId = x.MemoId, 
+                    MemoId = x.MemoId,
                     MAdvancveForm = x.MAdvancveForm,
                     DocumentNo = x.DocumentNo,
                 }).ToList();
@@ -72,13 +73,6 @@ namespace ThaiLifeAddon.Managers
                         {
                             var documentNumber = ReserveCarExt.getValueAdvanceForm(memo.MAdvancveForm, "เลขที่ใบขอซื้อ");
                             var srcOrder_List = AdvanceFormExt.GetDataTable(memo.MAdvancveForm, "รายการ");
-
-                            //var memoQuery = db.TRNMemoes.Where(x =>
-                            //(db.TRNMemoForms.Any(a => a.obj_label == "เลขที่ใบขอซื้อ" && a.obj_value == documentNumber || a.obj_value == memo.DocumentNo) || x.DocumentNo == memo.DocumentNo) &&
-                            //x.StatusName != Ext.Status._Cancelled &&
-                            //x.StatusName != Ext.Status._Rejected &&
-                            //x.StatusName != Ext.Status._Draft);
-
                             var memoRelate = db.TRNReferenceDocs.Where(x => x.MemoRefDocID == memo.MemoId)
                                 .Join(db.TRNMemoes,
                                 rm => rm.MemoID,
@@ -127,26 +121,40 @@ namespace ThaiLifeAddon.Managers
 
                             total_Orders = total_Orders
                                 .GroupBy(x => x.Id)
-                                .Select(g => new OrderModel
+                                .Select(g =>
                                 {
-                                    Id = g.Key,
-                                    Amount = g.Sum(x => x.Amount)
+                                    var orderId = g.Key;
+                                    var totalAmount = g.Sum(x => x.Amount);
+                                    LogAddon($"Order ID: {orderId}, Total Amount: {totalAmount}");
+
+                                    return new OrderModel
+                                    {
+                                        Id = orderId,
+                                        Amount = totalAmount
+                                    };
                                 })
                                 .ToList();
-
-                            LogAddon($"total_Orders : {total_Orders.ToJson()}");
 
                             var orderDifferences = total_Orders
                                 .Join(initial_Orders,
                                       total => total.Id,
                                       initial => initial.Id,
-                                      (total, initial) => new OrderModel
+                                      (total, initial) =>
                                       {
-                                          Id = total.Id,
-                                          Amount = initial.Amount - total.Amount,
+                                          var orderId = total.Id;
+                                          var totalAmount = total.Amount;
+                                          var initialAmount = initial.Amount;
+                                          var difference = initialAmount - totalAmount;
+
+                                          LogAddon($"Order ID: {orderId}, Initial Amount: {initialAmount}, Total Amount: {totalAmount}, Difference: {difference}");
+
+                                          return new OrderModel
+                                          {
+                                              Id = orderId,
+                                              Amount = difference
+                                          };
                                       })
                                 .ToList();
-                            LogAddon($"result orderDifferences : {orderDifferences.ToJson()}");
 
                             var removeOders = orderDifferences.FindAll(x => x.Amount <= 0);
                             LogAddon($"result removeOders : {removeOders.ToJson()}");
@@ -167,7 +175,7 @@ namespace ThaiLifeAddon.Managers
                             memo.MAdvancveForm = AdvanceFormExt.ReplaceDataTable(memo.MAdvancveForm, JObject.Parse(JsonConvert.SerializeObject(order_List)), "รายการ");
                         }
                     }
-                    catch(Exception ex)
+                    catch (Exception ex)
                     {
                         LogAddon($"MemoId Error : {memo.MemoId}");
                         LogAddon($"{ex}");
